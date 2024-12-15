@@ -1,0 +1,39 @@
+# Concurrency Benchmark Tool
+
+This project benchmarks the performance of different concurrency patterns in Rust, such as async, multithreading, and message passing.
+
+## Installation
+To build and run the project:
+
+```bash
+git clone https://github.com/yourusername/concurrency-benchmark.git
+cd concurrency-benchmark
+cargo run
+
+
+**Code** (`src/main.rs`):
+```rust
+use std::time::Instant;
+use tokio::task;
+
+async fn async_task() {
+    tokio::time::sleep(tokio::time::Duration::from_millis(500)).await;
+}
+
+fn multithreaded_task() {
+    let handle = std::thread::spawn(|| {
+        std::thread::sleep(std::time::Duration::from_millis(500));
+    });
+    handle.join().unwrap();
+}
+
+#[tokio::main]
+async fn main() {
+    let start = Instant::now();
+    async_task().await;
+    println!("Async task took: {:?}", start.elapsed());
+
+    let start = Instant::now();
+    multithreaded_task();
+    println!("Multithreaded task took: {:?}", start.elapsed());
+}
